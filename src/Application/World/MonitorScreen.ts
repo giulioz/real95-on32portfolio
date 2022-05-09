@@ -7,13 +7,9 @@ import Resources from '../Utils/Resources';
 import Sizes from '../Utils/Sizes';
 import Camera from '../Camera/Camera';
 import EventEmitter from '../Utils/EventEmitter';
+import { render95 } from './win95';
 
 const SCREEN_SIZE = { w: 1280, h: 1024 };
-const IFRAME_PADDING = 32;
-const IFRAME_SIZE = {
-    w: SCREEN_SIZE.w - IFRAME_PADDING,
-    h: SCREEN_SIZE.h - IFRAME_PADDING,
-};
 
 export default class MonitorScreen extends EventEmitter {
     application: Application;
@@ -62,8 +58,7 @@ export default class MonitorScreen extends EventEmitter {
             'mousemove',
             (event) => {
                 // @ts-ignore
-                const id = event.target.id;
-                if (id === 'computer-screen') {
+                if (event.target?.style?.imageRendering) {
                     // @ts-ignore
                     event.inComputer = true;
                 }
@@ -141,73 +136,7 @@ export default class MonitorScreen extends EventEmitter {
         container.style.opacity = '1';
         container.style.background = '#1d2e2f';
 
-        // Create iframe
-        const iframe = document.createElement('iframe');
-
-        // Bubble mouse move events to the main application, so we can affect the camera
-        iframe.onload = () => {
-            if (iframe.contentWindow) {
-                window.addEventListener('message', (event) => {
-                    var evt = new CustomEvent(event.data.type, {
-                        bubbles: true,
-                        cancelable: false,
-                    });
-
-                    // @ts-ignore
-                    evt.inComputer = true;
-                    if (event.data.type === 'mousemove') {
-                        var clRect = iframe.getBoundingClientRect();
-                        const { top, left, width, height } = clRect;
-                        const widthRatio = width / IFRAME_SIZE.w;
-                        const heightRatio = height / IFRAME_SIZE.h;
-
-                        // @ts-ignore
-                        evt.clientX = Math.round(
-                            event.data.clientX * widthRatio + left
-                        );
-                        //@ts-ignore
-                        evt.clientY = Math.round(
-                            event.data.clientY * heightRatio + top
-                        );
-                    } else if (event.data.type === 'keydown') {
-                        // @ts-ignore
-                        evt.key = event.data.key;
-                    } else if (event.data.type === 'keyup') {
-                        // @ts-ignore
-                        evt.key = event.data.key;
-                    }
-
-                    iframe.dispatchEvent(evt);
-                });
-            }
-        };
-
-        // Set iframe attributes
-        // PROD
-        iframe.src = 'https://henryheffernan.vercel.app/';
-        /**
-         * Use dev server is query params are present
-         *
-         * Warning: This will not work unless the dev server is running on localhost:3000
-         * Also running the dev server causes browsers to freak out over unsecure connections
-         * in the iframe, so it will flag a ton of issues.
-         */
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('dev')) {
-            iframe.src = 'http://localhost:3000/';
-        }
-        iframe.style.width = this.screenSize.width + 'px';
-        iframe.style.height = this.screenSize.height + 'px';
-        iframe.style.padding = IFRAME_PADDING + 'px';
-        iframe.style.boxSizing = 'border-box';
-        iframe.style.opacity = '1';
-        iframe.className = 'jitter';
-        iframe.id = 'computer-screen';
-        iframe.frameBorder = '0';
-        iframe.title = 'HeffernanOS';
-
-        // Add iframe to container
-        container.appendChild(iframe);
+        setTimeout(() => render95(container), 4000);
 
         // Create CSS plane
         this.createCssPlane(container);

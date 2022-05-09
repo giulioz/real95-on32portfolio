@@ -80,7 +80,7 @@ export default class Camera extends EventEmitter {
                 this.currentKeyframe === CameraKey.DESK ||
                 this.targetKeyframe === CameraKey.DESK
             ) {
-                this.transition(CameraKey.IDLE);
+                // this.transition(CameraKey.IDLE);
             }
         });
 

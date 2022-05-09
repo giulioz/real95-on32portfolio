@@ -89,3 +89,16 @@ body {
         transform: translate(0.075px, 0.025px) scale(1, 1);
     }
 }
+
+.w95Window {
+    transform: scale(1.5);
+    width: 800px !important;
+    height: 600px !important;
+    margin-left: calc(1280px / 2 - 800px / 2);
+    margin-top: calc(1024px / 2 - 600px / 2);
+}
+
+.w95Window canvas {
+    width: 800px !important;
+    height: 600px !important;
+}

@@ -82,6 +82,13 @@ module.exports = {
                 exclude: /node_modules/,
                 use: ['glslify-import-loader', 'raw-loader', 'glslify-loader'],
             },
+            {
+                test: /\.(wasm|bin|img)$/,
+                loader: 'url-loader',
+                options: {
+                    name: '[path][name].[ext]',
+                },
+            },
         ],
     },
 };
