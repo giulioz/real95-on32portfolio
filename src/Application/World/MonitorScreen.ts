@@ -136,7 +136,7 @@ export default class MonitorScreen extends EventEmitter {
         container.style.opacity = '1';
         container.style.background = '#1d2e2f';
 
-        setTimeout(() => render95(container), 4000);
+        setTimeout(() => render95(container), 6000);
 
         // Create CSS plane
         this.createCssPlane(container);
